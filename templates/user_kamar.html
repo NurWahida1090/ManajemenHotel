@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Daftar Kamar</title>
+</head>
+<body>
+    <h2>Daftar Kamar Tersedia</h2>
+    <table border="1">
+        <tr>
+            <th>Nomor</th>
+            <th>Tipe</th>
+            <th>Deskripsi</th>
+            <th>Harga</th>
+            <th>Status</th>
+            <th>Aksi</th>
+        </tr>
+        {% for k in kamar %}
+        <tr>
+            <td>{{ k.nomor_kamar }}</td>
+            <td>{{ k.tipe_kamar }}</td>
+            <td>{{ k.deskripsi }}</td>
+            <td>Rp {{ k.harga }}</td>
+            <td>{{ k.status }}</td>
+            <td>
+                {% if k.status == "tersedia" %}
+                <form action="/user/reservasi" method="post">
+                    <input type="hidden" name="id_kamar" value="{{ k.id }}">
+                    <input type="date" name="tanggal_checkin" required>
+                    <input type="date" name="tanggal_checkout" required>
+                    <button type="submit">Reservasi</button>
+                </form>
+                {% else %}Terisi{% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    <a href="/user/dashboard">Kembali ke Dashboard</a>
+</body>
+</html>

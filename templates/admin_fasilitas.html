@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kelola Fasilitas</title>
+    <style>
+        input, textarea { margin: 5px; width: 100%; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 8px; border: 1px solid #ccc; vertical-align: top; }
+        form { margin: 0; }
+        img { margin-bottom: 5px; border: 1px solid #999; }
+    </style>
+</head>
+<body>
+    <h2>Kelola Fasilitas</h2>
+
+    <!-- Form Tambah Fasilitas -->
+    <h3>Tambah Fasilitas Baru</h3>
+    <form action="/admin/fasilitas" method="post">
+        <input type="text" name="nama_fasilitas" placeholder="Nama Fasilitas" required>
+        <textarea name="deskripsi" placeholder="Deskripsi" required rows="3"></textarea>
+        <input type="text" name="gambar_fasilitas" placeholder="Contoh: kolam_renang.jpg" required>
+        <button type="submit">Tambah</button>
+    </form>
+
+    <!-- Tabel Fasilitas -->
+    <h3>Daftar Fasilitas</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nama Fasilitas</th>
+                <th>Deskripsi</th>
+                <th>Gambar</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for f in fasilitas %}
+            <tr>
+                <form action="/admin/fasilitas/{{ f.id }}" method="post">
+                    <input type="hidden" name="_method" value="put">
+                    <td>{{ f.id }}</td>
+                    <td><input type="text" name="nama_fasilitas" value="{{ f.nama_fasilitas }}"></td>
+                    <td><textarea name="deskripsi" rows="2">{{ f.deskripsi }}</textarea></td>
+                    <td>
+                        {% if f.gambar_fasilitas %}
+                            <img src="{{ url_for('static', path='images/' + f.gambar_fasilitas) }}" alt="gambar" width="120"><br>
+                        {% else %}
+                            <small>Tidak ada gambar</small><br>
+                        {% endif %}
+                        <input type="text" name="gambar_fasilitas" value="{{ f.gambar_fasilitas }}">
+                    </td>
+                    <td>
+                        <button type="submit">Update</button><br>
+                        <a href="/admin/fasilitas/{{ f.id }}/delete" onclick="return confirm('Hapus fasilitas ini?')">Hapus</a>
+                    </td>
+                </form>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <br><a href="/admin">⬅️ Kembali ke Dashboard</a>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kelola Kamar</title>
+    <style>
+        input, select, textarea { margin: 5px; width: 100%; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 8px; border: 1px solid #ccc; }
+        form { margin: 0; }
+        img { max-width: 100px; height: auto; }
+    </style>
+</head>
+<body>
+    <h2>Kelola Kamar</h2>
+
+    <!-- Form Tambah Kamar -->
+    <h3>Tambah Kamar Baru</h3>
+    <form action="/admin/kamar" method="post">
+        <input type="text" name="nomor_kamar" placeholder="Nomor Kamar" required>
+        <input type="text" name="tipe_kamar" placeholder="Tipe Kamar" required>
+        <input type="text" name="gambar_kamar" placeholder="URL Gambar Kamar" required>
+        <textarea name="deskripsi" placeholder="Deskripsi" rows="3" required></textarea>
+        <input type="number" step="0.01" name="harga" placeholder="Harga per Malam" required>
+        <select name="status" required>
+            <option value="">-- Pilih Status --</option>
+            <option value="tersedia">Tersedia</option>
+            <option value="terisi">Terisi</option>
+        </select>
+        <button type="submit">Tambah</button>
+    </form>
+
+    <!-- Tabel Kamar -->
+    <h3>Daftar Kamar</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nomor</th>
+                <th>Tipe</th>
+                <th>Gambar</th>
+                <th>Deskripsi</th>
+                <th>Harga</th>
+                <th>Status</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for k in kamar %}
+            <tr>
+                <form action="/admin/kamar/{{ k.id }}" method="post">
+                    <input type="hidden" name="_method" value="put">
+                    <td>{{ k.id }}</td>
+                    <td><input type="text" name="nomor_kamar" value="{{ k.nomor_kamar }}"></td>
+                    <td><input type="text" name="tipe_kamar" value="{{ k.tipe_kamar }}"></td>
+                    <td>
+                        <input type="text" name="gambar_kamar" value="{{ k.gambar_kamar }}">
+                        {% if k.gambar_kamar %}
+                        <br><img src="{{ k.gambar_kamar }}" alt="Gambar Kamar">
+                        {% endif %}
+                    </td>
+                    <td><textarea name="deskripsi" rows="2">{{ k.deskripsi }}</textarea></td>
+                    <td><input type="number" step="0.01" name="harga" value="{{ k.harga }}"></td>
+                    <td>
+                        <select name="status">
+                            <option value="tersedia" {% if k.status == 'tersedia' %}selected{% endif %}>Tersedia</option>
+                            <option value="terisi" {% if k.status == 'terisi' %}selected{% endif %}>Terisi</option>
+                        </select>
+                    </td>
+                    <td>
+                        <button type="submit">Update</button>
+                        <a href="/admin/kamar/{{ k.id }}/delete" onclick="return confirm('Hapus kamar ini?')">Hapus</a>
+                    </td>
+                </form>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <br>
+    <a href="/admin">⬅️ Kembali ke Dashboard</a>
+</body>
+</html>

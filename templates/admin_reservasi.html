@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kelola Reservasi</title>
+    <style>
+        input, select, textarea { margin: 5px; width: 100%; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 8px; border: 1px solid #ccc; text-align: left; }
+    </style>
+</head>
+<body>
+    <h2>Kelola Reservasi</h2>
+
+    <!-- Form Tambah Reservasi -->
+    <h3>Tambah Reservasi Baru</h3>
+    <form action="/admin/reservasi" method="post">
+        <input type="number" name="id_user" placeholder="ID User" required>
+        <input type="number" name="id_kamar" placeholder="ID Kamar" required>
+        <input type="number" name="nomor_kamar" placeholder="Nomor Kamar" required>
+        <input type="date" name="tanggal_checkin" required>
+        <input type="date" name="tanggal_checkout" required>
+        <input type="text" name="status" placeholder="Status (misal: booked / selesai)" required>
+        <button type="submit">Tambah</button>
+    </form>
+
+    <!-- Tabel Reservasi -->
+    <h3>Daftar Reservasi</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>User ID</th>
+                <th>Kamar ID</th>
+                <th>Nomor Kamar</th>
+                <th>Check-in</th>
+                <th>Check-out</th>
+                <th>Status</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in reservasi %}
+            <tr>
+                <form action="/admin/reservasi/{{ r.id }}" method="post">
+                    <input type="hidden" name="_method" value="put">
+                    <td>{{ r.id }}</td>
+                    <td><input type="number" name="id_user" value="{{ r.id_user }}"></td>
+                    <td><input type="number" name="id_kamar" value="{{ r.id_kamar }}"></td>
+                    <td><input type="number" name="nomor_kamar" value="{{ r.nomor_kamar }}"></td>
+                    <td><input type="date" name="tanggal_checkin" value="{{ r.tanggal_checkin }}"></td>
+                    <td><input type="date" name="tanggal_checkout" value="{{ r.tanggal_checkout }}"></td>
+                    <td><input type="text" name="status" value="{{ r.status }}"></td>
+                    <td>
+                        <button type="submit">Update</button>
+                        <a href="/admin/reservasi/{{ r.id }}/delete" onclick="return confirm('Yakin ingin menghapus reservasi ini?')">Hapus</a>
+                    </td>
+                </form>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <br><a href="/admin">⬅️ Kembali ke Dashboard</a>
+</body>
+</html>

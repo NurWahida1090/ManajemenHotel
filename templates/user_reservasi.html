@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reservasi Saya</title>
+</head>
+<body>
+    <h2>Daftar Reservasi Saya</h2>
+    <table border="1">
+        <tr>
+            <th>Nomor Kamar</th>
+            <th>Check-in</th>
+            <th>Check-out</th>
+            <th>Status</th>
+            <th>Aksi</th>
+        </tr>
+        {% for r in reservasi %}
+        <tr>
+            <form action="/user/reservasi/{{ r.id }}/update" method="post">
+                <td>{{ r.nomor_kamar }}</td>
+                <td><input type="date" name="tanggal_checkin" value="{{ r.tanggal_checkin }}"></td>
+                <td><input type="date" name="tanggal_checkout" value="{{ r.tanggal_checkout }}"></td>
+                <td>{{ r.status }}</td>
+                <td>
+                    <button type="submit">Ubah</button>
+                    <a href="/user/reservasi/{{ r.id }}/batal" onclick="return confirm('Yakin ingin membatalkan?')">Batal</a>
+                </td>
+            </form>
+        </tr>
+        {% endfor %}
+    </table>
+    <a href="/user/dashboard">Kembali ke Dashboard</a>
+</body>
+</html>

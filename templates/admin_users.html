@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kelola Users</title>
+    <style>
+        input, select { margin: 5px; }
+    </style>
+</head>
+<body>
+    <h2>Kelola Users</h2>
+
+    <!-- Form Tambah User -->
+    <h3>Tambah User Baru</h3>
+    <form action="/users" method="post">
+        <input type="text" name="nama" placeholder="Nama" required>
+        <input type="text" name="no_telepon" placeholder="No Telepon" required>
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <select name="role">
+            <option value="admin">Admin</option>
+            <option value="tamu">Tamu</option>
+        </select>
+        <button type="submit">Tambah</button>
+    </form>
+
+    <!-- Daftar Users -->
+    <h3>Daftar Users</h3>
+    <table border="1" cellpadding="5">
+        <tr>
+            <th>ID</th><th>Nama</th><th>Email</th><th>Role</th><th>Aksi</th>
+        </tr>
+        {% for u in users %}
+        <tr>
+            <form action="/admin/users/{{ u.id }}" method="post">
+                <input type="hidden" name="_method" value="put">
+                <td>{{ u.id }}</td>
+                <td><input type="text" name="nama" value="{{ u.nama }}"></td>
+                <td><input type="text" name="email" value="{{ u.email }}"></td>
+                <td>
+                    <select name="role">
+                        <option value="admin" {% if u.role == 'admin' %}selected{% endif %}>Admin</option>
+                        <option value="tamu" {% if u.role == 'tamu' %}selected{% endif %}>Tamu</option>
+                    </select>
+                </td>
+                <td>
+                    <button type="submit">Update</button>
+                    <a href="/admin/users/{{ u.id }}/delete" onclick="return confirm('Hapus user ini?')">Hapus</a>
+                </td>
+            </form>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <br><a href="/admin">⬅️ Kembali ke Dashboard</a>
+</body>
+</html>

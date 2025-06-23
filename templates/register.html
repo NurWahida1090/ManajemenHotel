@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register</title>
+</head>
+<body>
+    <h2>Register</h2>
+
+    {% if error %}
+    <p style="color: red;">{{ error }}</p>
+    {% endif %}
+
+    <form action="/users" method="post">
+        <label>Nama:</label><br>
+        <input type="text" name="nama" required><br><br>
+
+        <label>No Telepon:</label><br>
+        <input type="text" name="no_telepon" pattern="[0-9]{8,}" title="Minimal 8 digit angka" required><br><br>
+
+        <label>Email:</label><br>
+        <input type="email" name="email" pattern=".+@gmail\.com" title="Harus email @gmail.com" required><br><br>
+
+        <label>Password:</label><br>
+        <input type="password" name="password" minlength="4" required>
+
+        <input type="submit" value="Register">
+    </form>
+</body>
+</html>
