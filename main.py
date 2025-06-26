@@ -96,7 +96,6 @@ def create_user_from_form(
     no_telepon: str = Form(...),
     email: str = Form(...),
     password: str = Form(...),
-    role: str = Form("tamu"), 
     db: Session = Depends(get_db),
     request: Request = None
 ):
@@ -134,7 +133,7 @@ def create_user_from_form(
         no_telepon=no_telepon,
         email=email,
         password=hashed_password,
-        role=role,
+        role="tamu",
         created_at=datetime.utcnow()
     )
     db.add(db_user)
@@ -199,6 +198,8 @@ async def update_user_form(
         db_user.nama = form["nama"]
         db_user.email = form["email"]
         db_user.role = form["role"]
+        if current_user.id != db_user.id:
+            db_user.role = form["role"]
         db.commit()
     return RedirectResponse(url="/admin/users", status_code=303)
 
@@ -430,6 +431,10 @@ def user_lakukan_reservasi(
         raise HTTPException(status_code=404, detail="Kamar tidak ditemukan")
     if kamar.status.lower() != "tersedia":
         raise HTTPException(status_code=400, detail="Kamar tidak tersedia untuk reservasi")
+    
+    checkin = datetime.strptime(tanggal_checkin, "%Y-%m-%d").date()
+    checkout = datetime.strptime(tanggal_checkout, "%Y-%m-%d").date()
+    today = datetime.utcnow().date()
 
     reservasi = models.Reservasi(
         id_user=user.id,
@@ -462,11 +467,23 @@ async def update_reservasi_user(
     user: models.User = Depends(get_current_tamu)
 ):
     form = await request.form()
-    reservasi = db.query(models.Reservasi).filter(models.Reservasi.id == id, models.Reservasi.id_user == user.id).first()
-    if reservasi:
-        reservasi.tanggal_checkin = datetime.strptime(form["tanggal_checkin"], "%Y-%m-%d")
-        reservasi.tanggal_checkout = datetime.strptime(form["tanggal_checkout"], "%Y-%m-%d")
-        db.commit()
+    try:
+        checkin = datetime.strptime(form["tanggal_checkin"], "%Y-%m-%d").date()
+        checkout = datetime.strptime(form["tanggal_checkout"], "%Y-%m-%d").date()
+        today = datetime.utcnow().date()
+
+        reservasi = db.query(models.Reservasi).filter(
+            models.Reservasi.id == id,
+            models.Reservasi.id_user == user.id
+        ).first()
+
+        if reservasi and checkin >= today and checkout > checkin:
+            reservasi.tanggal_checkin = checkin
+            reservasi.tanggal_checkout = checkout
+            db.commit()
+
+    except:
+        pass  # kalau input tidak valid, lewati saja
     return RedirectResponse(url="/user/reservasi", status_code=303)
 
 @app.get("/user/reservasi/{id}/batal")
