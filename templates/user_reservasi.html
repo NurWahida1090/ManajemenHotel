@@ -1,33 +1,311 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reservasi Saya</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h2 {
+            font-size: 2.2rem;
+            font-weight: 300;
+            margin-bottom: 10px;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 15px;
+            text-align: left;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.9rem;
+        }
+
+        td {
+            padding: 20px 15px;
+            border-bottom: 1px solid #f0f0f0;
+            vertical-align: middle;
+        }
+
+        tr:hover {
+            background-color: #f8f9ff;
+            transform: translateY(-1px);
+            transition: all 0.3s ease;
+        }
+
+        .status {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status.aktif {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+
+        .status.pending {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+            color: #2d3436;
+        }
+
+        .status.dibatalkan {
+            background: linear-gradient(135deg, #fd79a8 0%, #e84393 100%);
+            color: white;
+        }
+
+        input[type="date"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e6ed;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        input[type="date"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-align: center;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #fd79a8 0%, #e84393 100%);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(253, 121, 168, 0.4);
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .back-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+        }
+
+        .empty-state img {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 10px;
+            }
+
+            .header {
+                padding: 20px;
+            }
+
+            .header h2 {
+                font-size: 1.8rem;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            th, td {
+                padding: 15px 10px;
+                font-size: 14px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .btn {
+                padding: 8px 16px;
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .table-container {
+                font-size: 12px;
+            }
+
+            th, td {
+                padding: 10px 8px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h2>Daftar Reservasi Saya</h2>
-    <table border="1">
-        <tr>
-            <th>Nomor Kamar</th>
-            <th>Check-in</th>
-            <th>Check-out</th>
-            <th>Status</th>
-            <th>Aksi</th>
-        </tr>
-        {% for r in reservasi %}
-        <tr>
-            <form action="/user/reservasi/{{ r.id }}/update" method="post">
-                <td>{{ r.nomor_kamar }}</td>
-                <td><input type="date" name="tanggal_checkin" value="{{ r.tanggal_checkin }}"></td>
-                <td><input type="date" name="tanggal_checkout" value="{{ r.tanggal_checkout }}"></td>
-                <td>{{ r.status }}</td>
-                <td>
-                    <button type="submit">Ubah</button>
-                    <a href="/user/reservasi/{{ r.id }}/batal" onclick="return confirm('Yakin ingin membatalkan?')">Batal</a>
-                </td>
-            </form>
-        </tr>
-        {% endfor %}
-    </table>
-    <a href="/user/dashboard">Kembali ke Dashboard</a>
+    <div class="container">
+        <div class="header">
+            <h2>📋 Daftar Reservasi Saya</h2>
+            <p>Kelola dan pantau reservasi kamar Anda</p>
+        </div>
+
+        <div class="content">
+            {% if reservasi %}
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>🏠 Nomor Kamar</th>
+                            <th>📅 Check-in</th>
+                            <th>📅 Check-out</th>
+                            <th>📊 Status</th>
+                            <th>⚙️ Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for r in reservasi %}
+                        <tr>
+                            <form action="/user/reservasi/{{ r.id }}/update" method="post">
+                                <td><strong>{{ r.nomor_kamar }}</strong></td>
+                                <td>
+                                    <input type="date" name="tanggal_checkin" value="{{ r.tanggal_checkin }}">
+                                </td>
+                                <td>
+                                    <input type="date" name="tanggal_checkout" value="{{ r.tanggal_checkout }}">
+                                </td>
+                                <td>
+                                    <span class="status {{ r.status.lower() }}">{{ r.status }}</span>
+                                </td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button type="submit" class="btn btn-primary">
+                                            💾 Ubah
+                                        </button>
+                                        <a href="/user/reservasi/{{ r.id }}/batal" 
+                                           class="btn btn-danger" 
+                                           onclick="return confirm('Yakin ingin membatalkan reservasi ini?')">
+                                            ❌ Batal
+                                        </a>
+                                    </div>
+                                </td>
+                            </form>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <div style="font-size: 4rem;">📋</div>
+                <h3>Belum Ada Reservasi</h3>
+                <p>Anda belum memiliki reservasi aktif. Mulai dengan memesan kamar!</p>
+            </div>
+            {% endif %}
+
+            <a href="/user/dashboard" class="back-link">
+                ← Kembali ke Dashboard
+            </a>
+        </div>
+    </div>
 </body>
 </html>

@@ -96,6 +96,7 @@ def create_user_from_form(
     no_telepon: str = Form(...),
     email: str = Form(...),
     password: str = Form(...),
+    role: str = Form("tamu"), 
     db: Session = Depends(get_db),
     request: Request = None
 ):
@@ -133,7 +134,7 @@ def create_user_from_form(
         no_telepon=no_telepon,
         email=email,
         password=hashed_password,
-        role="tamu",
+        role=role,
         created_at=datetime.utcnow()
     )
     db.add(db_user)
@@ -167,12 +168,11 @@ def login(
     access_token = create_access_token(data={"sub": user.email})
 
     response = RedirectResponse(
-        url="/admin" if user.role == "admin" else "/user/dashboard",
-        status_code=303
+    url="/admin/dashboard" if user.role == "admin" else "/user/dashboard",
+    status_code=303
     )
     response.set_cookie(key="access_token", value=f"Bearer {access_token}", httponly=True)
     return response
-
 
 
 # ========== ADMIN ROUTES ==========
@@ -400,6 +400,14 @@ def admin_delete_reservasi_form(
 
 
 # ========== USER - Lihat Daftar Kamar ==========
+@app.get("/kamar", response_class=HTMLResponse)
+def public_lihat_kamar(request: Request, db: Session = Depends(get_db)):
+    kamar = db.query(models.Kamar).all()
+    return templates.TemplateResponse("user_kamar.html", {
+        "request": request,
+        "kamar": kamar
+    })
+
 @app.get("/user/kamar", response_class=HTMLResponse)
 def user_lihat_kamar(request: Request, db: Session = Depends(get_db), user: models.User = Depends(get_current_tamu)):
     kamar = db.query(models.Kamar).all()
@@ -498,3 +506,10 @@ def user_dashboard(request: Request, user: models.User = Depends(get_current_use
 @app.get("/admin", response_class=HTMLResponse)
 def admin_page(request: Request):
     return templates.TemplateResponse("admin.html", {"request": request})
+
+@app.get("/admin/dashboard", response_class=HTMLResponse)
+def admin_dashboard(request: Request, user: models.User = Depends(get_current_admin)):
+    return templates.TemplateResponse("admin.html", {
+        "request": request,
+        "user": user
+    })

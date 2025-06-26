@@ -1,56 +1,84 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
+    <meta charset="UTF-8">
     <title>Kelola Users</title>
-    <style>
-        input, select { margin: 5px; }
-    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
-<body>
-    <h2>Kelola Users</h2>
+<body class="bg-light text-dark">
+    <div class="container py-4">
+        <h2 class="text-primary mb-4">Kelola Users</h2>
 
-    <!-- Form Tambah User -->
-    <h3>Tambah User Baru</h3>
-    <form action="/users" method="post">
-        <input type="text" name="nama" placeholder="Nama" required>
-        <input type="text" name="no_telepon" placeholder="No Telepon" required>
-        <input type="email" name="email" placeholder="Email" required>
-        <input type="password" name="password" placeholder="Password" required>
-        <select name="role">
-            <option value="admin">Admin</option>
-            <option value="tamu">Tamu</option>
-        </select>
-        <button type="submit">Tambah</button>
-    </form>
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">Tambah User Baru</div>
+            <div class="card-body">
+                <form action="/users" method="post" class="row g-3">
+                    <div class="col-md-4">
+                        <input type="text" name="nama" class="form-control" placeholder="Nama" required>
+                    </div>
+                    <div class="col-md-4">
+                        <input type="text" name="no_telepon" class="form-control" placeholder="No Telepon" required>
+                    </div>
+                    <div class="col-md-4">
+                        <input type="email" name="email" class="form-control" placeholder="Email" required>
+                    </div>
+                    <div class="col-md-4">
+                        <input type="password" name="password" class="form-control" placeholder="Password" required>
+                    </div>
+                    <div class="col-md-4">
+                        <select name="role" class="form-select">
+                            <option value="admin">Admin</option>
+                            <option value="tamu">Tamu</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-success w-100">Tambah</button>
+                    </div>
+                </form>
+            </div>
+        </div>
 
-    <!-- Daftar Users -->
-    <h3>Daftar Users</h3>
-    <table border="1" cellpadding="5">
-        <tr>
-            <th>ID</th><th>Nama</th><th>Email</th><th>Role</th><th>Aksi</th>
-        </tr>
-        {% for u in users %}
-        <tr>
-            <form action="/admin/users/{{ u.id }}" method="post">
-                <input type="hidden" name="_method" value="put">
-                <td>{{ u.id }}</td>
-                <td><input type="text" name="nama" value="{{ u.nama }}"></td>
-                <td><input type="text" name="email" value="{{ u.email }}"></td>
-                <td>
-                    <select name="role">
-                        <option value="admin" {% if u.role == 'admin' %}selected{% endif %}>Admin</option>
-                        <option value="tamu" {% if u.role == 'tamu' %}selected{% endif %}>Tamu</option>
-                    </select>
-                </td>
-                <td>
-                    <button type="submit">Update</button>
-                    <a href="/admin/users/{{ u.id }}/delete" onclick="return confirm('Hapus user ini?')">Hapus</a>
-                </td>
-            </form>
-        </tr>
-        {% endfor %}
-    </table>
+        <div class="card">
+            <div class="card-header bg-primary text-white">Daftar Users</div>
+            <div class="card-body p-0">
+                <table class="table table-bordered table-striped table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th><th>Nama</th><th>Email</th><th>Role</th><th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for u in users %}
+                        <tr>
+                            <form action="/admin/users/{{ u.id }}" method="post">
+                                <input type="hidden" name="_method" value="put">
+                                <td>{{ u.id }}</td>
+                                <td><input type="text" name="nama" value="{{ u.nama }}" class="form-control"></td>
+                                <td><input type="email" name="email" value="{{ u.email }}" class="form-control"></td>
+                                <td>
+                                    <select name="role" class="form-select">
+                                        <option value="admin" {% if u.role == 'admin' %}selected{% endif %}>Admin</option>
+                                        <option value="tamu" {% if u.role == 'tamu' %}selected{% endif %}>Tamu</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <div class="d-flex gap-1">
+                                        <button type="submit" class="btn btn-primary btn-sm">Update</button>
+                                        <a href="/admin/users/{{ u.id }}/delete" class="btn btn-danger btn-sm"
+                                           onclick="return confirm('Hapus user ini?')">Hapus</a>
+                                    </div>
+                                </td>
+                            </form>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-    <br><a href="/admin">⬅️ Kembali ke Dashboard</a>
+        <div class="mt-4">
+            <a href="/admin" class="btn btn-secondary">⬅️ Kembali ke Dashboard</a>
+        </div>
+    </div>
 </body>
 </html>
